@@ -1,0 +1,14 @@
+[package]
+name = "slice2d"
+version = "0.1.0"
+edition = "2021"
+
+authors = ["Mincong Lu <mintlux667@gmail.com>"]
+license = "MIT OR Apache-2.0"
+
+readme = "README.md"
+repository = "https://github.com/mintlu8/slice2d"
+description = """
+Ergonomic array slice for 2d array manipulation.
+"""
+keywords = ["array", "array2d", "slice", "nostd"]
