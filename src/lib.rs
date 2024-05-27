@@ -12,18 +12,20 @@
 #![no_std]
 use core::ops::{Index, IndexMut};
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 /// A 2 dimensional slice.
 pub struct Slice2D<'t, T> {
     stride: usize,
     len: usize,
-    slice: &'t [T]
+    slice: &'t [T],
 }
 
+#[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
 /// A mutable 2 dimensional slice.
 pub struct Slice2DMut<'t, T> {
     stride: usize,
     len: usize,
-    slice: &'t mut [T]
+    slice: &'t mut [T],
 }
 
 impl<T> Slice2D<'_, T> {
@@ -106,27 +108,27 @@ pub trait Slice2DExt {
     type Item;
 
     /// Obtain a [`Slice2D`] with row length `len` and skips `stride` per row.
-    /// 
+    ///
     /// Incomplete rows will be discarded.
     fn slice2d(&self, len: usize, stride: usize) -> Slice2D<'_, Self::Item>;
     /// Obtain a [`Slice2DMut`] with row length `len` and skips `stride` per row.
-    /// 
+    ///
     /// Incomplete rows will be discarded.
     fn slice2d_mut(&mut self, len: usize, stride: usize) -> Slice2DMut<'_, Self::Item>;
 
     /// Obtain a [`Slice2D`] by validating dimension.
-    /// 
+    ///
     /// This is equivalent to calling `slice2d(y, y)`.
     fn get_slice2d(&self, x: usize, y: usize) -> Option<Slice2D<'_, Self::Item>>;
     /// Obtain a [`Slice2DMut`] by validating dimension.
-    /// 
+    ///
     /// This is equivalent to calling `slice2d_mut(y, y)`.
-    fn get_slice2d_mut(&mut self, x: usize, y:usize) -> Option<Slice2DMut<'_, Self::Item>>;
+    fn get_slice2d_mut(&mut self, x: usize, y: usize) -> Option<Slice2DMut<'_, Self::Item>>;
 }
 
 impl<T> Slice2DExt for [T] {
     type Item = T;
-    fn slice2d(&self, len: usize, stride: usize) -> Slice2D<'_, Self::Item>{
+    fn slice2d(&self, len: usize, stride: usize) -> Slice2D<'_, Self::Item> {
         Slice2D {
             len,
             stride,
@@ -134,39 +136,35 @@ impl<T> Slice2DExt for [T] {
         }
     }
 
-    fn slice2d_mut(&mut self, len: usize, stride: usize) -> Slice2DMut<'_, Self::Item>{
+    fn slice2d_mut(&mut self, len: usize, stride: usize) -> Slice2DMut<'_, Self::Item> {
         Slice2DMut {
             len,
             stride,
             slice: self,
         }
     }
-    
+
     fn get_slice2d(&self, x: usize, y: usize) -> Option<Slice2D<'_, Self::Item>> {
         if self.len() != x * y {
             return None;
         }
-        Some(
-            Slice2D {
-                len: y,
-                stride: y,
-                slice: self,
-            }
-        )
+        Some(Slice2D {
+            len: y,
+            stride: y,
+            slice: self,
+        })
     }
-    
-    fn get_slice2d_mut(&mut self, x: usize, y:usize) -> Option<Slice2DMut<'_, Self::Item>> {
+
+    fn get_slice2d_mut(&mut self, x: usize, y: usize) -> Option<Slice2DMut<'_, Self::Item>> {
         if self.len() != x * y {
             return None;
         }
-        Some(
-            Slice2DMut {
-                len: y,
-                stride: y,
-                slice: self,
-            }
-        )
-    }    
+        Some(Slice2DMut {
+            len: y,
+            stride: y,
+            slice: self,
+        })
+    }
 }
 
 #[cfg(test)]
